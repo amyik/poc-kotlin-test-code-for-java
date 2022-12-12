@@ -6,6 +6,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.impl.annotations.SpyK
 import io.mockk.junit5.MockKExtension
+import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,12 +29,30 @@ class CalculatorServiceMockKTest {
     @SpyK
     var calculatorServiceSpy = CalculatorService()
 
+
+
     @Test
     fun `stubbing과 함수 호출 여부 verify`() {
         every { calculatorServiceMock.sum(1,1) } returns 3
         val sum = demoService.sum(1,1)
         assertThat(sum).isEqualTo(3)
         verify{calculatorServiceMock.sum(1,1)}
+    }
+
+    @Test
+    fun `argument capturing`() {
+
+        val slot = slot<Int>()
+
+        every { calculatorServiceMock.sum(capture(slot), any()) } answers {
+            println(slot.captured)
+            3;
+        }
+
+        demoService.sum(2, 2)
+        demoService.sum(3, 3)
+
+        verify(atLeast = 2) { calculatorServiceMock.sum(or(2, 3), any()) }
     }
 
     @Test
