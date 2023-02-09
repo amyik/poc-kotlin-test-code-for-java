@@ -30,6 +30,13 @@ class PrivateHolderTest {
     fun `private field stubbing`() {
         assertThat(privateHolder.callPrivateMethod()).isEqualTo("Not Stubbed")
         ReflectionTestUtils.setField(privateHolder, "privateStringField", "Now I am stubbed", String::class.java )
-        assertThat(privateHolder.callPrivateMethod()).isEqualTo("Now I am stubbed")
+        val invokeMethod:String = ReflectionTestUtils.invokeMethod(privateHolder, "myPrivateMethod", "str")
+        assertThat(invokeMethod).isEqualTo("Now I am stubbed")
+    }
+
+    @Test
+    fun `private method invoke`() {
+        val invokeMethod:String = ReflectionTestUtils.invokeMethod(privateHolder, "myPrivateMethod", "str")
+        assertThat(invokeMethod).isEqualTo("hi")
     }
 }

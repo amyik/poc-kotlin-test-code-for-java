@@ -12,4 +12,8 @@ public class PrivateHolder {
         return getPrivateStringField();
     }
 
+    private String myPrivateMethod(String str) {
+        return "hi";
+    }
+
 }
